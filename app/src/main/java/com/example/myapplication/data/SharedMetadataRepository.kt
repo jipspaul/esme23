@@ -6,5 +6,5 @@ import com.example.myapplication.data.models.User
 interface SharedMetadataRepository {
 
     fun sendMetadata(metadata: SharedMetadata)
-    fun getMetadata(userId: User): SharedMetadata
+    fun getMetadata(userId: String): SharedMetadata
 }
