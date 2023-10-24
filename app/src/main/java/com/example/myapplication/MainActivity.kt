@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import com.example.myapplication.data.SharedMetadataRepositoryImpl
 import com.example.myapplication.data.models.SharedMetadata
 import com.example.myapplication.domain.BatteryLevelUseCase
 import com.example.myapplication.domain.GetMetadataUseCase
+import com.example.myapplication.sharing.SharingActivity
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,8 +33,13 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                MainScreen(metaDataFlow)
+                MainScreen(metaDataFlow) { onStartSharing() }
             }
         }
+    }
+
+    private fun onStartSharing() {
+        val intent = Intent(this, SharingActivity::class.java)
+        startActivity(intent)
     }
 }

@@ -28,7 +28,7 @@ import com.example.myapplication.data.models.SharedMetadata
 
 
 @Composable
-fun MainScreen(mainViewModel: MainViewModel) {
+fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit) {
 
     return Surface(
         modifier = Modifier.fillMaxSize(),
@@ -40,7 +40,7 @@ fun MainScreen(mainViewModel: MainViewModel) {
         )
 
         Column {
-            TopBar()
+            TopBar(onStartSharing)
             sharedMetadata?.let { MetadataViewer(it) }
         }
     }
@@ -55,25 +55,18 @@ fun MetadataViewer(metadata: SharedMetadata, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(onClick: () -> Unit) {
     Row(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.End
     ) {
-
-        IconButton(onClick = { }) {
-            Icon(
-                Icons.Rounded.Share,
-                contentDescription = "Partagez"
-            )
-        }
-        IconButton(onClick = { }) {
-            Icon(
-                Icons.Rounded.Share,
-                contentDescription = "Partagez"
-            )
-        }
         followedUserList()
+        IconButton(onClick = onClick) {
+            Icon(
+                Icons.Rounded.Share,
+                contentDescription = "Partagez"
+            )
+        }
     }
 }
 
