@@ -83,9 +83,10 @@ val listItems = listOf("Klara", "Mark", "Sonia", "Paul")
 fun followedUserList() {
 
     var expanded by remember { mutableStateOf(false) }
+    var name by remember { mutableStateOf("Select User") }
 
     Box {
-        Text(text = "itemValue",
+        Text(text = name,
             modifier = Modifier
                 .clickable {
                     expanded = true
@@ -95,7 +96,10 @@ fun followedUserList() {
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             listItems.forEachIndexed { itemIndex, itemValue ->
                 DropdownMenuItem(
-                    onClick = { expanded = false },
+                    onClick = {
+                        name = listItems[itemIndex]
+                        expanded = false
+                    },
                     text = { Text(text = itemValue) }
                 )
             }
