@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.myapplication"
-    compileSdk = 33
+    compileSdk = 34
 
 
     defaultConfig {
@@ -61,7 +61,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("com.github.kenglxn.QRGen:android:2.6.0")
-
+    implementation("com.google.maps.android:maps-compose:2.7.2")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.maps.android:maps-compose:4.1.1")
+    // Optionally, ou can include the Compose utils library for Clustering,
+    // Street View etadata checks, etc.
+    implementation("com.google.maps.android:maps-compose-utils:4.1.1")
+    // Optionally, ou can include the widgets library for ScaleBar, etc.
+    implementation("com.google.maps.android:maps-compose-widgets:4.1.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

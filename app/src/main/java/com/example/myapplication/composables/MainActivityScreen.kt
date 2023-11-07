@@ -25,10 +25,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.myapplication.MainViewModel
 import com.example.myapplication.data.models.SharedMetadata
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
 fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit) {
+
+    val singapore = LatLng(1.35, 103.87)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(singapore, 10f)
+    }
 
     return Surface(
         modifier = Modifier.fillMaxSize(),
@@ -42,6 +51,10 @@ fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit) {
         Column {
             TopBar(onStartSharing)
             sharedMetadata?.let { MetadataViewer(it) }
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState
+            )
         }
     }
 }
