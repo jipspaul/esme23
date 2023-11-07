@@ -7,19 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetMetadataUseCase(private val sharedMetadataRepository: SharedMetadataRepository) {
-    fun getMetadata(userId: String): Flow<SharedMetadata> {
-        return flow {
-            var counter = 1
-            while (true) {
-                val sharedMetadata = sharedMetadataRepository.getMetadata(userId)
-                delay(1000)
-                counter++
-                if (true) { // check if we can access private data
-                    emit(sharedMetadata.copy(userId = "$counter"))
-                } else {
-                    emit(sharedMetadata.copy(privateData = null))
-                }
-            }
-        }
+    fun getMetadata(userId: String): SharedMetadata {
+        return sharedMetadataRepository.getMetadata(userId)
     }
 }

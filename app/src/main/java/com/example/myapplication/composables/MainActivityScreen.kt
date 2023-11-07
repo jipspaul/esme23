@@ -6,8 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -23,12 +27,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.myapplication.MainViewModel
 import com.example.myapplication.data.models.SharedMetadata
+import com.example.myapplication.data.models.User
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 
 
 @Composable
@@ -44,36 +53,79 @@ fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit) {
         color = MaterialTheme.colorScheme.background
     ) {
 
-        val sharedMetadata by mainViewModel.getMetadataFlow.collectAsState(
+        val sharedMetadata by mainViewModel.sharedMetaData.collectAsState(
             initial = null
         )
 
+        val listUser by mainViewModel.userFollowedList.collectAsState(
+            initial = listOf()
+        )
+
         Column {
-            TopBar(onStartSharing)
-            sharedMetadata?.let { MetadataViewer(it) }
+            TopBar(onStartSharing, { mainViewModel.selectUser(it) }, listUser)
+
+            sharedMetadata?.let {
+                MetadataViewer(it)
+            }
+
             GoogleMap(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp),
                 cameraPositionState = cameraPositionState
-            )
+            ) {
+                sharedMetadata?.let {
+                    Marker(
+                        state = rememberMarkerState(
+                            position = LatLng(
+                                it.location.lat,
+                                it.location.long
+                            )
+                        ),
+                        title = "${sharedMetadata?.userId}",
+                        snippet = "SAFE PLACE",
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)
+                    )
+                }
+            }
+
         }
     }
 }
 
 @Composable
 fun MetadataViewer(metadata: SharedMetadata, modifier: Modifier = Modifier) {
-    Text(
-        text = metadata.userId,
-        modifier = modifier
-    )
+
+    Card {
+        Column {
+            Text(
+                text = "User Id :${metadata.userId}",
+                modifier = modifier
+            )
+
+            Text(
+                text = "Phone Number : ${metadata.privateData?.phoneNumber}",
+                modifier = modifier
+            )
+            Text(
+                text = "Is on a Safe place : ",
+                modifier = modifier
+            )
+            Text(
+                text = "Battery Status :  ${metadata.batteryStatus.percentageValue}",
+                modifier = modifier
+            )
+        }
+    }
 }
 
 @Composable
-fun TopBar(onClick: () -> Unit) {
+fun TopBar(onClick: () -> Unit, onUserSelect: (String) -> Unit, list: List<User>) {
     Row(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.End
     ) {
-        followedUserList()
+        followedUserList(list, onUserSelect)
         IconButton(onClick = onClick) {
             Icon(
                 Icons.Rounded.Share,
@@ -83,10 +135,8 @@ fun TopBar(onClick: () -> Unit) {
     }
 }
 
-val listItems = listOf("Klara", "Mark", "Sonia", "Paul")
-
 @Composable
-fun followedUserList() {
+fun followedUserList(userFollowedList: List<User>, onUserSelect: (String) -> Unit) {
 
     var expanded by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("Select User") }
@@ -100,13 +150,14 @@ fun followedUserList() {
         )
 
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            listItems.forEachIndexed { itemIndex, itemValue ->
+            userFollowedList.forEachIndexed { itemIndex, itemValue ->
                 DropdownMenuItem(
                     onClick = {
-                        name = listItems[itemIndex]
+                        onUserSelect(userFollowedList[itemIndex].id)
+                        name = userFollowedList[itemIndex].firstName
                         expanded = false
                     },
-                    text = { Text(text = itemValue) }
+                    text = { Text(text = itemValue.firstName) }
                 )
             }
         }

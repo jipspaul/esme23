@@ -4,18 +4,18 @@ import com.example.myapplication.data.models.Location
 import com.example.myapplication.data.models.SharedMetadata
 import com.example.myapplication.data.models.User
 
-class SharedMetadataRepositoryImpl : SharedMetadataRepository{
+class SharedMetadataRepositoryImpl : SharedMetadataRepository {
     override fun sendMetadata(metadata: SharedMetadata) {
         TODO("Not yet implemented")
     }
 
     override fun getMetadata(userId: String): SharedMetadata {
         return SharedMetadata(
-            userId = "mnesarchum",
+            userId = userId,
             location = Location(
                 name = "Branden Haynes",
-                long = 2037,
-                lat = 5013
+                long = 103.87,
+                lat = 1.35
             ),
             batteryStatus = BatteryStatus(
                 percentageValue = 2.3,

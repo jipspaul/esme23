@@ -4,7 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,7 +17,7 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCib8GeWMF2Nq1svgI_eTLpw5GFgXqscFM"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAVwrg-M1Vc2cmBtaqQIbhSHnT-35RsM2k"/>
 
         <activity
             android:name=".sharing.SharingActivity"
