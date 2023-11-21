@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
@@ -41,7 +41,7 @@ import com.google.maps.android.compose.rememberMarkerState
 
 
 @Composable
-fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit) {
+fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit, onStartScan: () -> Unit) {
 
     val singapore = LatLng(1.35, 103.87)
     val cameraPositionState = rememberCameraPositionState {
@@ -61,8 +61,17 @@ fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit) {
             initial = listOf()
         )
 
+        if (sharedMetadata != null && sharedMetadata?.location?.lat != null && sharedMetadata?.location?.long != null) {
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(
+                LatLng(
+                    sharedMetadata?.location?.lat!!,
+                    sharedMetadata?.location?.long!!
+                ), 30f
+            )
+        }
+
         Column {
-            TopBar(onStartSharing, { mainViewModel.selectUser(it) }, listUser)
+            TopBar(onStartSharing, { mainViewModel.selectUser(it) }, onStartScan, listUser)
 
             sharedMetadata?.let {
                 MetadataViewer(it)
@@ -120,7 +129,12 @@ fun MetadataViewer(metadata: SharedMetadata, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TopBar(onClick: () -> Unit, onUserSelect: (String) -> Unit, list: List<User>) {
+fun TopBar(
+    onClick: () -> Unit,
+    onUserSelect: (String) -> Unit,
+    onScanButtonClick: () -> Unit,
+    list: List<User>
+) {
     Row(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.End
@@ -130,6 +144,13 @@ fun TopBar(onClick: () -> Unit, onUserSelect: (String) -> Unit, list: List<User>
             Icon(
                 Icons.Rounded.Share,
                 contentDescription = "Partagez"
+            )
+        }
+        IconButton(onClick = onScanButtonClick) {
+            Icon(
+                // camera icon
+                Icons.Filled.AddCircle,
+                contentDescription = "Scan"
             )
         }
     }

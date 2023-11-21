@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
 
     private val _sharedMetaData = MutableStateFlow<SharedMetadata?>(null)
-    val sharedMetaData: StateFlow<SharedMetadata?> = _sharedMetaData.asStateFlow()
+    val sharedMetaData: Flow<SharedMetadata?> = SharedMetadataRepositoryImpl().getMetadata("Mark")
 
     val userFollowedList = flow {
         emit(UserRepositoryImpl().getFollowedUser())
@@ -32,8 +32,10 @@ class MainViewModel : ViewModel() {
 
     fun selectUser(userId: String) {
         viewModelScope.launch {
-            _sharedMetaData.value =
-                GetMetadataUseCase(SharedMetadataRepositoryImpl()).getMetadata(userId)
+
+           // GetMetadataUseCase(.collect {
+           //     _sharedMetaData.value = it
+           // }
         }
     }
 }
