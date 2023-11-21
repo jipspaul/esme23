@@ -1,9 +1,13 @@
 package com.example.myapplication.data
 
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.example.myapplication.data.models.PrivateData
 import com.example.myapplication.data.models.User
+import kotlinx.coroutines.flow.Flow
 
-class UserRepositoryImpl : UserRepository {
+class UserRepositoryImpl (private val roomDatabase: RoomUserRepository) : UserRepository {
+
     override fun getMainUser(): User {
         TODO("Not yet implemented")
     }
@@ -16,55 +20,8 @@ class UserRepositoryImpl : UserRepository {
         TODO("Not yet implemented")
     }
 
-    override fun getFollowedUser(): List<User> {
-        return listOf(
-            User(
-                "Klara",
-                "Klara",
-                "Klara",
-                PrivateData(
-                    "0650000000",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Esme-sudria-logo.png/768px-Esme-sudria-logo.png"
-                )
-            ),
-            User(
-                "Mark",
-                "Mark",
-                "Mark",
-                PrivateData(
-                    "0650000000",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Esme-sudria-logo.png/768px-Esme-sudria-logo.png"
-                )
-            ),
-            User(
-                "Sonia",
-                "Sonia",
-                "Sonia",
-                PrivateData(
-                    "0650000000",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Esme-sudria-logo.png/768px-Esme-sudria-logo.png"
-                )
-            ),
-            User(
-                "Paul",
-                "Paul",
-                "Paul",
-                PrivateData(
-                    "0650000000",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Esme-sudria-logo.png/768px-Esme-sudria-logo.png"
-                )
-            )
-            ,
-            User(
-                "Thierry",
-                "Thierry",
-                "Thierry",
-                PrivateData(
-                    "0650000000",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Esme-sudria-logo.png/768px-Esme-sudria-logo.png"
-                )
-            )
-        )
+    override fun getFollowedUser(): Flow<List<User>> {
+        return roomDatabase.getFollowedUser()
     }
 
     override fun getFollowerUser(): List<User> {

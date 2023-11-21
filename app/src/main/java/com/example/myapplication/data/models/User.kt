@@ -9,5 +9,6 @@ data class User(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     val lastName: String,
     val firstName: String,
-    val privateData: PrivateData,
+    val phoneNumber: String,
+    val imgUrl: String,
 )

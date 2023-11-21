@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.MainViewModel
+import com.example.myapplication.data.UserRepository
 import com.example.myapplication.data.models.SharedMetadata
 import com.example.myapplication.data.models.User
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -41,7 +42,12 @@ import com.google.maps.android.compose.rememberMarkerState
 
 
 @Composable
-fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit, onStartScan: () -> Unit) {
+fun MainScreen(
+    mainViewModel: MainViewModel,
+    onStartSharing: () -> Unit,
+    onStartScan: () -> Unit,
+    userRepository: UserRepository
+) {
 
     val singapore = LatLng(1.35, 103.87)
     val cameraPositionState = rememberCameraPositionState {
@@ -57,7 +63,7 @@ fun MainScreen(mainViewModel: MainViewModel, onStartSharing: () -> Unit, onStart
             initial = null
         )
 
-        val listUser by mainViewModel.userFollowedList.collectAsState(
+        val listUser by userRepository.getFollowedUser().collectAsState(
             initial = listOf()
         )
 

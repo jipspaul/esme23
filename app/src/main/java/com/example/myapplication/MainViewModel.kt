@@ -23,9 +23,6 @@ class MainViewModel : ViewModel() {
     private val _sharedMetaData = MutableStateFlow<SharedMetadata?>(null)
     val sharedMetaData: Flow<SharedMetadata?> = SharedMetadataRepositoryImpl().getMetadata("Mark")
 
-    val userFollowedList = flow {
-        emit(UserRepositoryImpl().getFollowedUser())
-    }
 
     val hardwareDataProvider = HardwareDataProviderImpl()
     val useCase = BatteryLevelUseCase(hardwareDataProvider)
