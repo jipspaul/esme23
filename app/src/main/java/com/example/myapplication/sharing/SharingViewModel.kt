@@ -1,21 +1,20 @@
 package com.example.myapplication.sharing
 
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.data.UserRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
-import java.util.UUID
-import java.util.concurrent.Flow
 
 class SharingViewModel : ViewModel() {
 
-    fun getQrCode(): String {
-        //TODO send serveur UUID value
-        return "esme23:https://esme23.fr/?${UUID.randomUUID()}"
+    fun getQrCode() = flow {
+        emit(Gson().toJson(UserRepository.getInstance().getMainUser()).toString())
     }
 
     fun getTimer() = flow {
         delay(5000)
-        emit(true)
+        emit(false)
     }
 
 

@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.room.Room
 import com.example.myapplication.composables.MainScreen
+import com.example.myapplication.data.UserRepository
 import com.example.myapplication.data.UserRepositoryImpl
 import com.example.myapplication.data.dao.AppDatabase
 import com.example.myapplication.scanner.ScannerActivity
@@ -24,6 +25,10 @@ class MainActivity : ComponentActivity() {
             applicationContext,
             AppDatabase::class.java, "user-database"
         ).build()
+        UserRepository.init(
+            db.userDao(),
+            applicationContext.getSharedPreferences("user", MODE_PRIVATE)
+        )
 
         setContent {
             MyApplicationTheme {
@@ -31,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     metaDataFlow,
                     { onStartSharing() },
                     { onStartScanner() },
-                    UserRepositoryImpl(db.userDao())
+                    UserRepository.getInstance()
                 )
             }
         }

@@ -1,5 +1,6 @@
 package com.example.myapplication.scanner
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -27,7 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.room.Room
+import com.example.myapplication.data.UserRepository
+import com.example.myapplication.data.dao.AppDatabase
+import com.example.myapplication.data.models.User
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import java.util.concurrent.Executors
 
 class ScannerActivity : ComponentActivity() {
@@ -44,7 +51,7 @@ class ScannerActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        PreviewViewComposable()
+                        PreviewViewComposable { finish() }
                         Text(
                             text = "Scan QR Code",
                             modifier = Modifier.padding(top = 48.dp)
@@ -62,7 +69,7 @@ class ScannerActivity : ComponentActivity() {
 
 @androidx.camera.core.ExperimentalGetImage
 @Composable
-fun PreviewViewComposable() {
+fun PreviewViewComposable(finish: () -> Unit) {
     AndroidView(
         { context ->
             val cameraExecutor = Executors.newSingleThreadExecutor()
@@ -83,9 +90,22 @@ fun PreviewViewComposable() {
 
                 val imageAnalyzer = ImageAnalysis.Builder()
                     .build()
-                    .also {
-                        it.setAnalyzer(cameraExecutor, BarcodeAnalyser {
-                            Toast.makeText(context, "Barcode found", Toast.LENGTH_SHORT).show()
+                    .also { qrcodeData ->
+                        qrcodeData.setAnalyzer(cameraExecutor, BarcodeAnalyser {
+
+                            val db = Room.databaseBuilder(
+                                context.applicationContext,
+                                AppDatabase::class.java, "user-database"
+                            ).build()
+
+                            saveUser(
+                                context,
+                                it,
+                                UserRepository.getInstance()
+                            )
+                            finish()
+                            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+
                         })
                     }
 
@@ -115,6 +135,19 @@ fun PreviewViewComposable() {
     )
 }
 
+fun saveUser(context: Context, user: String, userRepository: UserRepository) {
+    try {
+        //Thread
+        Thread {
+            userRepository.follow(Gson().fromJson(user, User::class.java))
+        }.start()
+
+    } catch (e: JsonSyntaxException) {
+        Toast.makeText(context, "Erreur JSON", Toast.LENGTH_SHORT).show()
+    } catch (e: Exception) { //DB error
+        Toast.makeText(context, "Erreur DB", Toast.LENGTH_SHORT).show()
+    }
+}
 
 
 

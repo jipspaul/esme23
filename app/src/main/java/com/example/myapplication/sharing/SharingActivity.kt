@@ -11,11 +11,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapplication.data.UserRepository
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import net.glxn.qrgen.android.QRCode
 
@@ -26,8 +26,10 @@ class SharingActivity : ComponentActivity() {
 
         val viewModel by viewModels<SharingViewModel>()
 
+
         setContent {
             val showValidState = viewModel.getTimer().collectAsState(initial = false)
+            val userRepository = UserRepository.getInstance()
 
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
@@ -36,7 +38,7 @@ class SharingActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (!showValidState.value) {
-                        QRCodeView(viewModel.getQrCode())
+                        QRCodeView(viewModel.getQrCode().collectAsState(initial = "AZZ").value)
                     } else {
                         Text("Votre QR code a bien été partagé")
                     }

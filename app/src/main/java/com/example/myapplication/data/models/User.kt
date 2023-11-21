@@ -12,3 +12,12 @@ data class User(
     val phoneNumber: String,
     val imgUrl: String,
 )
+
+//Json
+// {
+//     "id": "1",
+//     "lastName": "Doe",
+//     "firstName": "John",
+//     "phoneNumber": "0123456789",
+//     "imgUrl": "https://www.google.com"
+// }
