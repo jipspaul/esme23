@@ -23,7 +23,7 @@ interface UserRepository {
         }
     }
 
-    fun getMainUser(): User
+    fun getMainUser(): User?
     fun setMainUser(user: User)
     fun getUserById(userId: String): User
     fun follow(user: User)

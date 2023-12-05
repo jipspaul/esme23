@@ -10,7 +10,7 @@ class UserRepositoryImpl(
     private val sharedPreferences: SharedPreferences
 ) : UserRepository {
 
-    override fun getMainUser(): User {
+    override fun getMainUser(): User? {
         val user = sharedPreferences.getString("main_user_json", null)
         return if (user != null) {
             Gson().fromJson(user, User::class.java)
@@ -18,7 +18,7 @@ class UserRepositoryImpl(
             val tmpUser = User("1", "Esme", "John", "0123456789", "https://www.google.com")
             sharedPreferences.edit().putString(Gson().toJson(tmpUser), "main_user_json").apply()
             sharedPreferences.getString("main_user_json", null)
-                ?.let { Gson().fromJson(it, User::class.java) }!!
+                ?.let { Gson().fromJson(it, User::class.java) }
         }
     }
 
